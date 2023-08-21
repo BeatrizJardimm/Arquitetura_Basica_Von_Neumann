@@ -1,16 +1,15 @@
-class RAM:
+from memory import Memoria
+
+
+class RAM(Memoria):
     def __init__(self, k):
         self.capacidade = 2**k
-        self.dados = [0] * self.capacidade
+        self.ram = [0] * self.capacidade
 
     def read(self, endereco):
-        return self.dados[endereco]
+        super().verifica_endereco(endereco)
+        return self.ram[endereco]
 
     def write(self, endereco, palavra):
-        if endereco > self.capacidade - 1:
-            return False
-        elif endereco < 0:
-            return False
-        else:
-            self.dados[endereco] = palavra
-            return True
+        super().verifica_endereco(endereco)
+        self.ram[endereco] = palavra
