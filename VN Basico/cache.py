@@ -1,5 +1,6 @@
 from memory import Memoria
 from ram import RAM
+from memory import EnderecoInvalido
 
 class CACHE(Memoria):
     def __init__(self, capacidade, ram: RAM):
@@ -9,23 +10,24 @@ class CACHE(Memoria):
 
     def read(self, endereco):
         try:
-            world = self.cache[endereco]
-            print(f'Cache HIT: {world}')
+            word = self.cache[endereco]
+            print(f'Cache HIT: {endereco}')
 
-            return world
+            return word
+
         except:
             print(f'Cache MISS: {endereco}')
             self.atualizarEnderecoCache(endereco)
-            world = self.cache[endereco]
+            word = self.cache[endereco]
+            return word
 
-            return world
+    def write(self, endereco, word):
 
-    def write(self, endereco, world):
         try:
             self.read(endereco)
-            self.cache[endereco] = world
-        except:
-            raise Exception("Finalizar")
+            self.cache[endereco] = word
+        except EnderecoInvalido as e:
+            print(f"Erro", e.__str__())
 
     def atualizarEnderecoCache(self, endereco):
         count = 0
@@ -37,7 +39,7 @@ class CACHE(Memoria):
         for i in range(endereco, self.ram.capacidade):
             self.cache[i] = self.ram.read(i)
             
-            if count > self.capacidade -1:
+            if count > self.capacidade:
                 break
 
             count+=1
